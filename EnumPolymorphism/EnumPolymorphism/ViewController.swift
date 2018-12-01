@@ -14,6 +14,51 @@ enum CellType: Int, CaseIterable {
     case ad
 }
 
+protocol Cell {
+    var description: String { get }
+    func onSelection()
+}
+
+struct CellFactory {
+    static func createCell(fromIndexPath indexPath: IndexPath) -> Cell {
+        switch CellType(rawValue: indexPath.row)! {
+        case .blog:
+            return BlogCell()
+        case .video:
+            return VideoCell()
+        case .ad:
+            return AdCell()
+        }
+    }
+}
+
+struct BlogCell: Cell {
+    var description: String {
+        return "This is a blog post"
+    }
+    func onSelection() {
+        print("Display the blog ViewController")
+    }
+}
+
+struct VideoCell: Cell {
+    var description: String {
+        return "This is a video"
+    }
+    func onSelection() {
+        print("Display the video player ViewController")
+    }
+}
+
+struct AdCell: Cell {
+    var description: String {
+        return "This is an ad"
+    }
+    func onSelection() {
+        print("Visit an advertisement link")
+    }
+}
+
 class ViewController: UIViewController { }
 
 extension ViewController: UITableViewDataSource {
@@ -22,29 +67,12 @@ extension ViewController: UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
-        var description: String
-        switch CellType(rawValue: indexPath.row)! {
-        case .blog:
-            description = "This is a blog post"
-        case .video:
-            description = "This is a video"
-        case .ad:
-            description = "This is an ad"
-        }
-        cell.textLabel?.text = description
+        cell.textLabel?.text = CellFactory.createCell(fromIndexPath: indexPath).description
         return cell
     }
 }
 extension ViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        switch CellType(rawValue: indexPath.row)! {
-        case .blog:
-            print("Display the blog ViewController")
-        case .video:
-            print("Display the video player ViewController")
-        case .ad:
-            print("Visit an advertisement link")
-        }
+        CellFactory.createCell(fromIndexPath: indexPath).onSelection()
     }
 }
-
