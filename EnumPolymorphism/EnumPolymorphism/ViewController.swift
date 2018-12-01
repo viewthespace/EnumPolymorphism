@@ -14,9 +14,7 @@ enum CellType: Int, CaseIterable {
     case ad
 }
 
-class ViewController: UIViewController {
-
-}
+class ViewController: UIViewController { }
 
 extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -35,6 +33,18 @@ extension ViewController: UITableViewDataSource {
         }
         cell.textLabel?.text = description
         return cell
+    }
+}
+extension ViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch CellType(rawValue: indexPath.row)! {
+        case .blog:
+            print("Display the blog ViewController")
+        case .video:
+            print("Display the video player ViewController")
+        case .ad:
+            print("Visit an advertisement link")
+        }
     }
 }
 
